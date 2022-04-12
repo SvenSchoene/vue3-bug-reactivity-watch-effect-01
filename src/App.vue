@@ -5,12 +5,12 @@
     Set `isWorking` to true and change it back after 5 seconds
   </button>
 
-  <button @click="triggerWatchEffect">Trigger WatchEffect</button>
+  <button @click="triggerWatch">Trigger Watch</button>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { startWatchEffect } from "./is-working-watch-effect";
+import { startWatch } from "./is-working-watch";
 
 export default {
   name: "App",
@@ -27,8 +27,8 @@ export default {
         this.setIsWorking(false);
       }, 5000);
     },
-    triggerWatchEffect: function () {
-      startWatchEffect(this.$store);
+    triggerWatch: function () {
+      startWatch(this.$store);
     },
   },
 };
