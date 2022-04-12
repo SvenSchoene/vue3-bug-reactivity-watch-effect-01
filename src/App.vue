@@ -1,26 +1,55 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <p>isWorking: {{ isWorking }}</p>
+
+  <button @click="toggleIsWorking">
+    Set `isWorking` to true and change it back after 5 seconds
+  </button>
+
+  <button @click="triggerWatchEffect">Trigger WatchEffect</button>
+  <!-- <button v-if="watchEffectHandle === null" @click="startWatchEffect">
+    Start WatchEffect
+  </button>
+  <button v-if="watchEffectHandle !== null" @click="stopWatchEffect">
+    Stop WatchEffect
+  </button> -->
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { startWatchEffect } from "./is-working-watch-effect";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  name: "App",
+  data: () => ({
+    watchEffectHandle: null,
+  }),
+  computed: {
+    ...mapState("app", ["isWorking"]),
+  },
+  methods: {
+    ...mapMutations("app", ["setIsWorking"]),
+    toggleIsWorking: async function () {
+      this.$store.commit("app/setIsWorking", true);
+
+      setTimeout(() => {
+        this.$store.commit("app/setIsWorking", false);
+      }, 5000);
+    },
+    triggerWatchEffect: async function () {
+      await startWatchEffect(this.$store);
+    },
+    startWatchEffect: async function () {
+      this.watchEffectHandle = await startWatchEffect(this.$store);
+    },
+    stopWatchEffect: async function () {
+      if (this.watchEffectHandle) {
+        this.watchEffectHandle();
+      }
+      this.watchEffectHandle = null;
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
 </style>
