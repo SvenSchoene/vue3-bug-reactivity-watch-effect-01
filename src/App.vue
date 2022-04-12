@@ -6,46 +6,29 @@
   </button>
 
   <button @click="triggerWatchEffect">Trigger WatchEffect</button>
-  <!-- <button v-if="watchEffectHandle === null" @click="startWatchEffect">
-    Start WatchEffect
-  </button>
-  <button v-if="watchEffectHandle !== null" @click="stopWatchEffect">
-    Stop WatchEffect
-  </button> -->
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { startWatchEffect } from "./is-working-watch-effect";
 
 export default {
   name: "App",
-  data: () => ({
-    watchEffectHandle: null,
-  }),
+  data: () => ({}),
   computed: {
     ...mapState("app", ["isWorking"]),
   },
   methods: {
     ...mapMutations("app", ["setIsWorking"]),
     toggleIsWorking: async function () {
-      this.$store.commit("app/setIsWorking", true);
+      this.setIsWorking(true);
 
       setTimeout(() => {
-        this.$store.commit("app/setIsWorking", false);
+        this.setIsWorking(false);
       }, 5000);
     },
-    triggerWatchEffect: async function () {
-      await startWatchEffect(this.$store);
-    },
-    startWatchEffect: async function () {
-      this.watchEffectHandle = await startWatchEffect(this.$store);
-    },
-    stopWatchEffect: async function () {
-      if (this.watchEffectHandle) {
-        this.watchEffectHandle();
-      }
-      this.watchEffectHandle = null;
+    triggerWatchEffect: function () {
+      startWatchEffect(this.$store);
     },
   },
 };
